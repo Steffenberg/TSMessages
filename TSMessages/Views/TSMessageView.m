@@ -184,6 +184,13 @@ static NSMutableDictionary *_notificationDesign;
             [self.titleLabel setFont:[UIFont boldSystemFontOfSize:fontSize]];
         }
         
+        if (![TSMessage iOS7StyleEnabled])
+        {
+            [self.titleLabel setShadowColor:[UIColor colorWithHexString:[current valueForKey:@"shadowColor"] alpha:1.0]];
+            [self.titleLabel setShadowOffset:CGSizeMake([[current valueForKey:@"shadowOffsetX"] floatValue],
+                                                        [[current valueForKey:@"shadowOffsetY"] floatValue])];
+        }
+        
         self.titleLabel.numberOfLines = 0;
         self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [self addSubview:self.titleLabel];
@@ -231,7 +238,39 @@ static NSMutableDictionary *_notificationDesign;
         {
             _button = [UIButton buttonWithType:UIButtonTypeCustom];
             
+            if (![TSMessage iOS7StyleEnabled])
+            {
+                UIImage *buttonBackgroundImage = [[UIImage imageNamed:[current valueForKey:@"buttonBackgroundImageName"]] resizableImageWithCapInsets:UIEdgeInsetsMake(15.0, 12.0, 15.0, 11.0)];
+            
+                if (!buttonBackgroundImage)
+                {
+                    buttonBackgroundImage = [[UIImage imageNamed:[current valueForKey:@"NotificationButtonBackground"]] resizableImageWithCapInsets:UIEdgeInsetsMake(15.0, 12.0, 15.0, 11.0)];
+                }
+            
+                [self.button setBackgroundImage:buttonBackgroundImage forState:UIControlStateNormal];
+            }
+            
             [self.button setTitle:self.buttonTitle forState:UIControlStateNormal];
+            
+            if (![TSMessage iOS7StyleEnabled])
+            {
+                UIColor *buttonTitleShadowColor = [UIColor colorWithHexString:[current valueForKey:@"buttonTitleShadowColor"] alpha:1.0];
+                if (!buttonTitleShadowColor)
+                {
+                    buttonTitleShadowColor = self.titleLabel.shadowColor;
+                }
+            
+                [self.button setTitleShadowColor:buttonTitleShadowColor forState:UIControlStateNormal];
+            
+                UIColor *buttonTitleTextColor = [UIColor colorWithHexString:[current valueForKey:@"buttonTitleTextColor"] alpha:1.0];
+                if (!buttonTitleTextColor)
+                {
+                    buttonTitleTextColor = fontColor;
+                }
+            
+                [self.button setTitleColor:buttonTitleTextColor forState:UIControlStateNormal];
+            }
+            
             [self.button setBackgroundColor:[UIColor colorWithHexString:[current valueForKey:@"buttonTitleTextColor"] alpha:1.0]];
             [self.button setTitleColor:[UIColor colorWithHexString:[current valueForKey:@"backgroundColor"]] forState:UIControlStateNormal];
             self.button.titleLabel.font = [UIFont boldSystemFontOfSize:14.0];
