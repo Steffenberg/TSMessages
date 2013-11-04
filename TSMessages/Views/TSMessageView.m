@@ -270,9 +270,13 @@ static NSMutableDictionary *_notificationDesign;
             
                 [self.button setTitleColor:buttonTitleTextColor forState:UIControlStateNormal];
             }
+            else
+            {
+                [self.button setBackgroundColor:[UIColor colorWithHexString:[current valueForKey:@"buttonTitleTextColor"] alpha:1.0]];
+                [self.button setTitleColor:[UIColor colorWithHexString:[current valueForKey:@"backgroundColor"]] forState:UIControlStateNormal];
+            }
             
-            [self.button setBackgroundColor:[UIColor colorWithHexString:[current valueForKey:@"buttonTitleTextColor"] alpha:1.0]];
-            [self.button setTitleColor:[UIColor colorWithHexString:[current valueForKey:@"backgroundColor"]] forState:UIControlStateNormal];
+            
             self.button.titleLabel.font = [UIFont boldSystemFontOfSize:14.0];
             self.button.titleLabel.shadowOffset = CGSizeMake([[current valueForKey:@"buttonTitleShadowOffsetX"] floatValue],
                                                              [[current valueForKey:@"buttonTitleShadowOffsetY"] floatValue]);
