@@ -313,6 +313,14 @@ static NSMutableDictionary *_notificationDesign;
         CGFloat actualHeight = [self updateHeightOfMessageView]; // this call also takes care of positioning the labels
         CGFloat topPosition = -actualHeight;
         
+        if([TSMessage iOS7StyleEnabled])
+        {
+            CGRect buttonFrame = self.button.frame;
+            buttonFrame.size.height = actualHeight;                                 //30 = titleLabel x origin //15 = View Padding
+            buttonFrame.size.width = screenWidth - self.titleLabel.frame.size.width - 30 - 15;
+            self.button.frame = buttonFrame;
+        }
+        
         if (self.messagePosition == TSMessageNotificationPositionBottom)
         {
             topPosition = self.viewController.view.bounds.size.height;
