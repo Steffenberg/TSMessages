@@ -316,8 +316,9 @@ static NSMutableDictionary *_notificationDesign;
         if([TSMessage iOS7StyleEnabled])
         {
             CGRect buttonFrame = self.button.frame;
-            buttonFrame.size.height = actualHeight;                                 //30 = titleLabel x origin //15 = View Padding
-            buttonFrame.size.width = screenWidth - self.titleLabel.frame.size.width - 30 - 15;
+            CGFloat labelWidth = screenWidth - TSMessageViewPadding - self.textSpaceLeft - self.textSpaceRight;
+            buttonFrame.size.height = actualHeight;           //30 = titleLabel x origin
+            buttonFrame.size.width = screenWidth - labelWidth - 30 - TSMessageViewPadding;
             self.button.frame = buttonFrame;
         }
         
