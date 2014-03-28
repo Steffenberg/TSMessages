@@ -186,9 +186,14 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         } else {
             [self.titleLabel setFont:[UIFont boldSystemFontOfSize:fontSize]];
         }
-        [self.titleLabel setShadowColor:[UIColor colorWithHexString:[current valueForKey:@"shadowColor"] alpha:1.0]];
-        [self.titleLabel setShadowOffset:CGSizeMake([[current valueForKey:@"shadowOffsetX"] floatValue],
-                                                    [[current valueForKey:@"shadowOffsetY"] floatValue])];
+        
+        if (![TSMessage iOS7StyleEnabled])
+        {
+            [self.titleLabel setShadowColor:[UIColor colorWithHexString:[current valueForKey:@"shadowColor"] alpha:1.0]];
+            [self.titleLabel setShadowOffset:CGSizeMake([[current valueForKey:@"shadowOffsetX"] floatValue],
+                                                        [[current valueForKey:@"shadowOffsetY"] floatValue])];
+        }
+        
         self.titleLabel.numberOfLines = 0;
         self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [self addSubview:self.titleLabel];
@@ -236,31 +241,45 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         {
             _button = [UIButton buttonWithType:UIButtonTypeCustom];
             
-            UIImage *buttonBackgroundImage = [[UIImage imageNamed:[current valueForKey:@"buttonBackgroundImageName"]] resizableImageWithCapInsets:UIEdgeInsetsMake(15.0, 12.0, 15.0, 11.0)];
-            
-            if (!buttonBackgroundImage)
+            if (![TSMessage iOS7StyleEnabled])
             {
-                buttonBackgroundImage = [[UIImage imageNamed:[current valueForKey:@"NotificationButtonBackground"]] resizableImageWithCapInsets:UIEdgeInsetsMake(15.0, 12.0, 15.0, 11.0)];
+                UIImage *buttonBackgroundImage = [[UIImage imageNamed:[current valueForKey:@"buttonBackgroundImageName"]] resizableImageWithCapInsets:UIEdgeInsetsMake(15.0, 12.0, 15.0, 11.0)];
+            
+                if (!buttonBackgroundImage)
+                {
+                    buttonBackgroundImage = [[UIImage imageNamed:[current valueForKey:@"NotificationButtonBackground"]] resizableImageWithCapInsets:UIEdgeInsetsMake(15.0, 12.0, 15.0, 11.0)];
+                }
+            
+                [self.button setBackgroundImage:buttonBackgroundImage forState:UIControlStateNormal];
             }
             
-            [self.button setBackgroundImage:buttonBackgroundImage forState:UIControlStateNormal];
             [self.button setTitle:self.buttonTitle forState:UIControlStateNormal];
             
-            UIColor *buttonTitleShadowColor = [UIColor colorWithHexString:[current valueForKey:@"buttonTitleShadowColor"] alpha:1.0];
-            if (!buttonTitleShadowColor)
+            if (![TSMessage iOS7StyleEnabled])
             {
-                buttonTitleShadowColor = self.titleLabel.shadowColor;
+                UIColor *buttonTitleShadowColor = [UIColor colorWithHexString:[current valueForKey:@"buttonTitleShadowColor"] alpha:1.0];
+                if (!buttonTitleShadowColor)
+                {
+                    buttonTitleShadowColor = self.titleLabel.shadowColor;
+                }
+            
+                [self.button setTitleShadowColor:buttonTitleShadowColor forState:UIControlStateNormal];
+            
+                UIColor *buttonTitleTextColor = [UIColor colorWithHexString:[current valueForKey:@"buttonTitleTextColor"] alpha:1.0];
+                if (!buttonTitleTextColor)
+                {
+                    buttonTitleTextColor = fontColor;
+                }
+            
+                [self.button setTitleColor:buttonTitleTextColor forState:UIControlStateNormal];
+            }
+            else
+            {
+                [self.button setBackgroundColor:[UIColor colorWithHexString:[current valueForKey:@"buttonTitleTextColor"] alpha:1.0]];
+                [self.button setTitleColor:[UIColor colorWithHexString:[current valueForKey:@"backgroundColor"]] forState:UIControlStateNormal];
             }
             
-            [self.button setTitleShadowColor:buttonTitleShadowColor forState:UIControlStateNormal];
             
-            UIColor *buttonTitleTextColor = [UIColor colorWithHexString:[current valueForKey:@"buttonTitleTextColor"] alpha:1.0];
-            if (!buttonTitleTextColor)
-            {
-                buttonTitleTextColor = fontColor;
-            }
-            
-            [self.button setTitleColor:buttonTitleTextColor forState:UIControlStateNormal];
             self.button.titleLabel.font = [UIFont boldSystemFontOfSize:14.0];
             self.button.titleLabel.shadowOffset = CGSizeMake([[current valueForKey:@"buttonTitleShadowOffsetX"] floatValue],
                                                              [[current valueForKey:@"buttonTitleShadowOffsetY"] floatValue]);
@@ -296,6 +315,15 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         
         CGFloat actualHeight = [self updateHeightOfMessageView]; // this call also takes care of positioning the labels
         CGFloat topPosition = -actualHeight;
+        
+        if([TSMessage iOS7StyleEnabled])
+        {
+            CGRect buttonFrame = self.button.frame;
+            CGFloat labelWidth = screenWidth - TSMessageViewPadding - self.textSpaceLeft - self.textSpaceRight;
+            buttonFrame.size.height = actualHeight;           //30 = titleLabel x origin
+            buttonFrame.size.width = screenWidth - labelWidth - 30 - TSMessageViewPadding;
+            self.button.frame = buttonFrame;
+        }
         
         if (self.messagePosition == TSMessageNotificationPositionBottom)
         {
