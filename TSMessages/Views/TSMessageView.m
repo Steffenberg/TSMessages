@@ -355,9 +355,11 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
             [self addGestureRecognizer:tapRec];
         }
         
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-        tapGesture.delegate = self;
-        [self addGestureRecognizer:tapGesture];
+        if (self.callback) {
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+            tapGesture.delegate = self;
+            [self addGestureRecognizer:tapGesture];
+        }
     }
     return self;
 }
@@ -450,8 +452,8 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
             if (!navigationController && [self.viewController isKindOfClass:[UINavigationController class]]) {
                 navigationController = (UINavigationController *)self.viewController;
             }
-            BOOL isNavBarIsHidden = !navigationController || [TSMessage isNavigationBarInNavigationControllerHidden:self.viewController.navigationController];
-            BOOL isNavBarIsOpaque = !self.viewController.navigationController.navigationBar.isTranslucent && self.viewController.navigationController.navigationBar.alpha == 1;
+            BOOL isNavBarIsHidden = !navigationController || [TSMessage isNavigationBarInNavigationControllerHidden:navigationController];
+            BOOL isNavBarIsOpaque = !navigationController.navigationBar.isTranslucent && navigationController.navigationBar.alpha == 1;
             
             if (isNavBarIsHidden || isNavBarIsOpaque) {
                 topOffset = -30.f;
