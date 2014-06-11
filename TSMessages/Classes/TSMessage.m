@@ -20,9 +20,6 @@
 /** The queued messages (TSMessageView objects) */
 @property (nonatomic, strong) NSMutableArray *messages;
 
-+ (UIViewController *)defaultViewController;
-
-
 - (void)fadeInCurrentNotification;
 - (void)fadeOutNotification:(TSMessageView *)currentView;
 
@@ -204,21 +201,32 @@ __weak static UIViewController *_defaultViewController;
         verticalOffset += offset;
     };
     
-    if ([currentView.viewController isKindOfClass:[UINavigationController class]])
+    if ([currentView.viewController isKindOfClass:[UINavigationController class]] || [currentView.viewController.parentViewController isKindOfClass:[UINavigationController class]])
     {
-        if (![(UINavigationController *)currentView.viewController isNavigationBarHidden])
+        UINavigationController *currentNavigationController;
+        
+        if([currentView.viewController isKindOfClass:[UINavigationController class]])
+            currentNavigationController = (UINavigationController *)currentView.viewController;
+        else
+            currentNavigationController = (UINavigationController *)currentView.viewController.parentViewController;
+            
+        BOOL isViewIsUnderStatusBar = [[[currentNavigationController childViewControllers] firstObject] wantsFullScreenLayout];
+        if (!isViewIsUnderStatusBar) {
+            isViewIsUnderStatusBar = ![currentNavigationController isNavigationBarHidden]; // strange but true
+        }
+        if (![currentNavigationController isNavigationBarHidden])
         {
-            [currentView.viewController.view insertSubview:currentView
-                                              belowSubview:[(UINavigationController *)currentView.viewController navigationBar]];
-            verticalOffset = [(UINavigationController *)currentView.viewController navigationBar].bounds.size.height;
-            if ([TSMessage iOS7StyleEnabled]) {
+            [currentNavigationController.view insertSubview:currentView
+                                               belowSubview:[currentNavigationController navigationBar]];
+            verticalOffset = [currentNavigationController navigationBar].bounds.size.height;
+            if ([TSMessage iOS7StyleEnabled] || isViewIsUnderStatusBar) {
                 addStatusBarHeightToVerticalOffset();
             }
         }
         else
         {
             [currentView.viewController.view addSubview:currentView];
-            if ([TSMessage iOS7StyleEnabled]) {
+            if ([TSMessage iOS7StyleEnabled] || isViewIsUnderStatusBar) {
                 addStatusBarHeightToVerticalOffset();
             }
         }

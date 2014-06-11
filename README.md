@@ -23,6 +23,8 @@ Add `pod 'TSMessages'` to your Podfile.
 
 Drag the whole folder into your project and remove the example project. This library requires ARC.
 
+Drag HexColors{.h/.m} from Submodules/HexColors/Classes into your project.
+
 To show notifications use the following code:
 --------
 
@@ -74,8 +76,8 @@ If you don't want a detailed description (the text underneath the title) you don
 ![Message](http://www.toursprung.com/wp-content/uploads/2013/04/iNotificationMessage.png)
 
 **iOS 7 Support**
-![iOS 7 Error](http://www.toursprung.com/wp-content/uploads/2013/09/iOSScreenshot_40.png)
-![iOS 7 Message](http://www.toursprung.com/wp-content/uploads/2013/09/iOSScreenshot_41.png)
+![iOS 7 Error](http://www.toursprung.com/wp-content/uploads/2013/09/error_ios7.png)
+![iOS 7 Message](http://www.toursprung.com/wp-content/uploads/2013/09/warning_ios7.png)
 
 This project requires ARC.
 
