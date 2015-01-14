@@ -319,9 +319,8 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         if([TSMessage iOS7StyleEnabled])
         {
             CGRect buttonFrame = self.button.frame;
-            CGFloat labelWidth = screenWidth - TSMessageViewPadding - self.textSpaceLeft - self.textSpaceRight;
-            buttonFrame.size.height = actualHeight;           //30 = titleLabel x origin
-            buttonFrame.size.width = screenWidth - labelWidth - 30 - TSMessageViewPadding;
+            buttonFrame.size.height = actualHeight;
+            buttonFrame.size.width += TSMessageViewPadding;
             self.button.frame = buttonFrame;
         }
         
