@@ -338,7 +338,7 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         {
             CGRect buttonFrame = self.button.frame;
             buttonFrame.size.height = actualHeight;
-            buttonFrame.size.width += TSMessageViewPadding;
+            buttonFrame.size.width += TSMessageViewMinimumPadding;
             self.button.frame = buttonFrame;
         }
         
